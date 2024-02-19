@@ -1,4 +1,5 @@
-const selectAllTopics = require("./app.model");
+const { selectAllTopics, selectAllEndpoint } = require("./app.model");
+const endpoints = require("../endpoints.json");
 
 const db = "../db";
 
@@ -12,4 +13,14 @@ function getAllTopics(req, res, next) {
     });
 }
 
-module.exports = getAllTopics;
+function getAllEndpoint(req, res, next) {
+  selectAllEndpoint()
+    .then((endpoints) => {
+      res.status(200).send({ endpoints });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getAllTopics, getAllEndpoint };
