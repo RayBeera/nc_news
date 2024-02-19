@@ -3,6 +3,7 @@ const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const request = require("supertest");
 const data = require("../db/data/test-data");
+const endpoint = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(data);
@@ -29,5 +30,17 @@ describe("GET /api/topics", () => {
   });
   it("invalid endpoint", () => {
     return request(app).get("/api/invalidEndpoint").expect(404);
+  });
+});
+
+describe("GET /api/", () => {
+  it("get all valid endpoint", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((res) => {
+        const endpoints = res.body.endpoints;
+        expect(endpoints).toMatchObject(endpoint);
+      });
   });
 });
