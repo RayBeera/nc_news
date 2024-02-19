@@ -5,11 +5,11 @@ const request = require("supertest");
 const data = require("../db/data/test-data");
 
 beforeEach(() => {
-    return seed(data);
-  });
-  afterAll(() => {
-    db.end();
-  });
+  return seed(data);
+});
+afterAll(() => {
+  db.end();
+});
 
 describe("GET /api/topics", () => {
   it("return an array of objects", () => {
@@ -26,5 +26,8 @@ describe("GET /api/topics", () => {
           });
         });
       });
+  });
+  it("invalid endpoint", () => {
+    return request(app).get("/api/invalidEndpoint").expect(404);
   });
 });

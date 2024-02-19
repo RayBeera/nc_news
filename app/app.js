@@ -5,8 +5,6 @@ const app = express();
 
 app.get("/api/topics", getAllTopics);
 
-app.use(express.json());
-
 app.use((err, req, res, next) => {
   if (err) {
     res.status(err.status).send({ msg: err.msg });
