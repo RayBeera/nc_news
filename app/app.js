@@ -1,7 +1,16 @@
-const express = require("express")
+const express = require("express");
+const getAllTopics = require("./app.controller");
 
-const app = express()
+const app = express();
 
-app.get("/api/topics", )
+app.get("/api/topics", getAllTopics);
 
-module.exports = app
+app.use(express.json());
+
+app.use((err, req, res, next) => {
+  if (err) {
+    res.status(err.status).send({ msg: err.msg });
+  }
+});
+
+module.exports = app;

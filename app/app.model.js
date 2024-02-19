@@ -1,7 +1,7 @@
-const db = require("./db");
+const db = require("../db/connection.js");
 
 function selectAllTopics(res, req) {
-  db.query(`SELECT * FROM topics`).then((topic) => {
+ return db.query(`SELECT * FROM topics`).then((topic) => {
     return topic.rows
   });
 }
