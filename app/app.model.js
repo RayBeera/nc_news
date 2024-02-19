@@ -24,7 +24,12 @@ function selectArticleById(articleId) {
       [articleId]
     )
     .then((article) => {
-      console.log(article.rows);
+      if (article.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "article not found",
+        });
+      }
       return article.rows[0];
     });
 }

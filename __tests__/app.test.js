@@ -65,4 +65,12 @@ describe("GET /api/articles/:article_id", () => {
         });
       });
   });
+  it("GET:404 status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not found");
+      });
+  });
 });
