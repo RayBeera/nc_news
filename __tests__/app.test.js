@@ -90,7 +90,6 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then((res) => {
         const { articles } = res.body;
-        console.log(res.body)
         expect(articles.length).toBe(13);
         articles.forEach((article) => {
           expect(article).toMatchObject({
@@ -102,6 +101,37 @@ describe("GET /api/articles", () => {
             votes: expect.any(Number),
             article_img_url: expect.any(String),
             comment_count: expect.any(String),
+          });
+        });
+      });
+  });
+  test("GET 200: returned array is sorted by date in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { articles } = response.body;
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  it("get all comments for an article", () => {
+    return request(app)
+      .get("/api/articles/9/comments")
+      .expect(200)
+      .then((res) => {
+        const { comments } = res.body;
+        expect(comments).toHaveLength(2);
+        comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            article_id: 9,
           });
         });
       });

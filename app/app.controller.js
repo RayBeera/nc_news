@@ -3,6 +3,7 @@ const {
   selectAllEndpoint,
   selectArticleById,
   selectAllArticles,
+  selectAllComments,
 } = require("./app.model");
 const endpointsFile = require("../endpoints.json");
 
@@ -48,9 +49,18 @@ function getAllArticles(req, res, next) {
     });
 }
 
+function getAllComments (req,res , next) {
+  const {article_id} = req.params
+selectAllComments(article_id)
+.then((comments) => {
+  res.status(200).send({comments})
+})
+}
+
 module.exports = {
   getAllTopics,
   getAllEndpoint,
   getArticleById,
   getAllArticles,
+  getAllComments
 };

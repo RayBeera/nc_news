@@ -49,9 +49,18 @@ function selectAllArticles() {
       return article.rows;
     });
 }
+
+function selectAllComments(article_id) {
+return db.query(` SELECT * FROM comments WHERE article_id = $1`, [article_id])
+.then((comment) => {
+  
+  return comment.rows
+})
+}
 module.exports = {
   selectAllTopics,
   selectAllEndpoint,
   selectArticleById,
   selectAllArticles,
+  selectAllComments,
 };
