@@ -3,7 +3,13 @@ const {
   getAllTopics,
   getAllEndpoint,
   getArticleById,
+  getAllArticles,
 } = require("./app.controller");
+const {
+  handleCustomErrors,
+  handlePsqlErrors,
+  handleServerErrors,
+} = require("../errorhandling");
 
 const app = express();
 
@@ -13,10 +19,12 @@ app.get("/api/", getAllEndpoint);
 
 app.get("/api/articles/:article_id", getArticleById);
 
-app.use((err, req, res, next) => {
-  if (err) {
-    res.status(err.status).send({ msg: err.msg });
-  }
-});
+app.get("/api/articles", getAllArticles);
+
+app.use(handleCustomErrors);
+
+app.use(handlePsqlErrors);
+
+app.use(handleServerErrors);
 
 module.exports = app;

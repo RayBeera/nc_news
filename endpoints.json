@@ -25,5 +25,22 @@
         }
       ]
     }
+  },
+  "GET /api/articles/3": {
+    "description": "serves a single article with specific id",
+    "queries": [],
+    "exampleResponse": {
+      "articles": [
+        {
+          "article_id": 3,
+          "title": "Eight pug gifs that remind me of mitch",
+          "topic": "mitch",
+          "author": "icellusedkars",
+          "body": "some gifs",
+          "created_at": 1604394720000,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        }
+      ]
+    }
   }
 }

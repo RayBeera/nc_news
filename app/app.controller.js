@@ -2,6 +2,7 @@ const {
   selectAllTopics,
   selectAllEndpoint,
   selectArticleById,
+  selectAllArticles,
 } = require("./app.model");
 const endpointsFile = require("../endpoints.json");
 
@@ -37,4 +38,19 @@ function getArticleById(req, res, next) {
     });
 }
 
-module.exports = { getAllTopics, getAllEndpoint, getArticleById };
+function getAllArticles(req, res, next) {
+  selectAllArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = {
+  getAllTopics,
+  getAllEndpoint,
+  getArticleById,
+  getAllArticles,
+};

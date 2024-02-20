@@ -47,30 +47,63 @@ describe("GET /api/", () => {
 
 describe("GET /api/articles/:article_id", () => {
   it("GET an article object with specific id", () => {
-    const articleId = 2;
     return request(app)
-      .get(`/api/articles/${articleId}`)
+      .get(`/api/articles/3`)
       .expect(200)
       .then((res) => {
         const { article } = res.body;
         expect(article).toMatchObject({
-          author: expect.any(String),
-          title: expect.any(String),
-          article_id: articleId,
-          body: expect.any(String),
-          topic: expect.any(String),
+          author: "icellusedkars",
+          title: "Eight pug gifs that remind me of mitch",
+          article_id: 3,
+          body: "some gifs",
+          topic: "mitch",
           created_at: expect.any(String),
           votes: expect.any(Number),
-          article_img_url: expect.any(String),
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
       });
   });
-  it("GET:404 status and error message when given a valid but non-existent id", () => {
+  it("GET 404 status and error message when given a valid but non-existent id", () => {
     return request(app)
       .get("/api/articles/999")
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("article not found");
+      });
+  });
+  it("GET 400 status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/banana")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+});
+
+xdescribe("GET /api/articles", () => {
+  it("return an array of object with all articles", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+        expect(articles.length).toBe(13);
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            body: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
       });
   });
 });

@@ -14,14 +14,14 @@ function selectAllEndpoint() {
   });
 }
 
-function selectArticleById(articleId) {
+function selectArticleById(articles_id) {
   return db
     .query(
       `
   SELECT *
   FROM articles
   WHERE article_id = $1`,
-      [articleId]
+      [articles_id]
     )
     .then((article) => {
       if (article.rows.length === 0) {
@@ -33,4 +33,20 @@ function selectArticleById(articleId) {
       return article.rows[0];
     });
 }
-module.exports = { selectAllTopics, selectAllEndpoint, selectArticleById };
+
+function selectAllArticles() {
+  return db
+    .query(
+      `Select * 
+  From articles`
+    )
+    .then((article) => {
+      article.rows;
+    });
+}
+module.exports = {
+  selectAllTopics,
+  selectAllEndpoint,
+  selectArticleById,
+  selectAllArticles,
+};
