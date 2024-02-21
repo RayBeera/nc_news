@@ -161,13 +161,14 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(comments).toBeSortedBy("created_at", { descending: true });
       });
   });
-  test('GET 200 when article has no comment', () => {
+  test("GET 200 when article has no comment", () => {
     return request(app)
-    .get("/api/articles/2/comments")
-    .expect(200)
-    .then((res) => {
-      const { comments } = res.body;
-      expect(comments).toHaveLength(0)
-    })
-  })
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((res) => {
+        const { comments } = res.body;
+        expect(comments).toHaveLength(0);
+        expect(comments).toEqual([]);
+      });
+  });
 });
