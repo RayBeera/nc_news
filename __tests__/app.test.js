@@ -1,4 +1,4 @@
-const app = require("../app/app.js");
+const app = require("../app.js");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const request = require("supertest");
@@ -90,7 +90,6 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then((res) => {
         const { articles } = res.body;
-        console.log(res.body)
         expect(articles.length).toBe(13);
         articles.forEach((article) => {
           expect(article).toMatchObject({
@@ -104,6 +103,72 @@ describe("GET /api/articles", () => {
             comment_count: expect.any(String),
           });
         });
+      });
+  });
+  test("GET 200 and an  array is sorted by date in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { articles } = response.body;
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  it("get all comments for an article", () => {
+    return request(app)
+      .get("/api/articles/9/comments")
+      .expect(200)
+      .then((res) => {
+        const { comments } = res.body;
+        expect(comments).toHaveLength(2);
+        comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            article_id: 9,
+          });
+        });
+      });
+  });
+  it("GET 404 status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not found");
+      });
+  });
+  it("GET 400 status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/banana/comments")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET 200 array with the most recent comment first", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        const { comments } = response.body;
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("GET 200 when article has no comment", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((res) => {
+        const { comments } = res.body;
+        expect(comments).toHaveLength(0);
+        expect(comments).toEqual([]);
       });
   });
 });

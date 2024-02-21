@@ -2,14 +2,18 @@ const express = require("express");
 const {
   getAllTopics,
   getAllEndpoint,
-  getArticleById,
-  getAllArticles,
-} = require("./app.controller");
+  getAllCommentsById,
+} = require("./controller/topics.controller");
 const {
   handleCustomErrors,
   handlePsqlErrors,
   handleServerErrors,
-} = require("../errorhandling");
+} = require("./errorhandling");
+
+const {
+  getArticleById,
+  getAllArticles,
+} = require("./controller/articles.controller");
 
 const app = express();
 
@@ -20,6 +24,10 @@ app.get("/api/", getAllEndpoint);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getAllArticles);
+
+app.get("/api/articles/:article_id/comments", getAllCommentsById);
+
+
 
 app.use(handleCustomErrors);
 

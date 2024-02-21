@@ -1,10 +1,11 @@
 const {
   selectAllTopics,
   selectAllEndpoint,
-  selectArticleById,
-  selectAllArticles,
-} = require("./app.model");
+  selectCommentsById,
+} = require("../models/topics.model");
 const endpointsFile = require("../endpoints.json");
+const { selectArticleById } = require("../models/articles.model");
+const { response } = require("../app");
 
 const db = "../db";
 
@@ -27,21 +28,19 @@ function getAllEndpoint(req, res, next) {
       next(err);
     });
 }
-function getArticleById(req, res, next) {
-  const { article_id } = req.params;
-  selectArticleById(article_id)
-    .then((article) => {
-      res.status(200).send({ article });
-    })
-    .catch((err) => {
-      next(err);
-    });
-}
 
-function getAllArticles(req, res, next) {
-  selectAllArticles()
-    .then((articles) => {
-      res.status(200).send({ articles });
+function getAllCommentsById(req, res, next) {
+  const { article_id } = req.params;
+  const promises = [selectCommentsById(article_id)];
+
+  if (article_id) {
+    promises.push(selectArticleById(article_id));
+  }
+
+  Promise.all(promises)
+    .then((result) => {
+      console.log(result);
+      res.status(200).send({ comments: result[0] });
     })
     .catch((err) => {
       next(err);
@@ -51,6 +50,5 @@ function getAllArticles(req, res, next) {
 module.exports = {
   getAllTopics,
   getAllEndpoint,
-  getArticleById,
-  getAllArticles,
+  getAllCommentsById,
 };

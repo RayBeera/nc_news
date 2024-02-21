@@ -1,26 +1,13 @@
 const db = require("../db/connection.js");
 const fs = require("fs/promises");
 
-function selectAllTopics(res, req) {
-  return db.query(`SELECT * FROM topics`).then((topic) => {
-    return topic.rows;
-  });
-}
-
-function selectAllEndpoint() {
-  return fs.readFile(`${__dirname}/../endpoints.json`, "utf-8").then((data) => {
-    const endpoints = JSON.parse(data);
-    return endpoints;
-  });
-}
-
 function selectArticleById(articles_id) {
   return db
     .query(
       `
-  SELECT *
-  FROM articles
-  WHERE article_id = $1`,
+    SELECT *
+    FROM articles
+    WHERE article_id = $1`,
       [articles_id]
     )
     .then((article) => {
@@ -38,20 +25,20 @@ function selectAllArticles() {
   return db
     .query(
       `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url,
-  COUNT (comments.comment_id) AS comment_count
-  FROM articles
-  LEFT JOIN comments
-  ON articles.article_id = comments.article_id
-  GROUP BY articles.article_id
-  ORDER BY articles.created_at DESC;`
+    COUNT (comments.comment_id) AS comment_count
+    FROM articles
+    LEFT JOIN comments
+    ON articles.article_id = comments.article_id
+    GROUP BY articles.article_id
+    ORDER BY articles.created_at DESC;`
     )
     .then((article) => {
       return article.rows;
     });
 }
 module.exports = {
-  selectAllTopics,
-  selectAllEndpoint,
-  selectArticleById,
-  selectAllArticles,
-};
+   
+    selectArticleById,
+    selectAllArticles,
+
+  };
