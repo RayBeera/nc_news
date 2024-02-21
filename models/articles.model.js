@@ -37,6 +37,8 @@ function selectAllArticles() {
     });
 }
 module.exports = {
-  selectArticleById,
-  selectAllArticles,
-};
+   
+    selectArticleById,
+    selectAllArticles,
+
+  };

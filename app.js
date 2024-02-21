@@ -2,7 +2,7 @@ const express = require("express");
 const {
   getAllTopics,
   getAllEndpoint,
-  getAllComments,
+  getAllCommentsById,
 } = require("./controller/topics.controller");
 const {
   handleCustomErrors,
@@ -25,7 +25,9 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getAllArticles);
 
-app.get("/api/articles/:article_id/comments", getAllComments);
+app.get("/api/articles/:article_id/comments", getAllCommentsById);
+
+
 
 app.use(handleCustomErrors);
 

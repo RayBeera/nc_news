@@ -105,7 +105,7 @@ describe("GET /api/articles", () => {
         });
       });
   });
-  test("GET 200: returned array is sorted by date in descending order", () => {
+  test("GET 200 and an  array is sorted by date in descending order", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -141,7 +141,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/999/comments")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("No article found");
+        expect(res.body.msg).toBe("article not found");
       });
   });
   it("GET 400 status and error message when given an invalid id", () => {
@@ -152,7 +152,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe("Bad request");
       });
   });
-  test("GET 200: sends the array with the most recent comment first", () => {
+  test("GET 200 array with the most recent comment first", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
@@ -161,4 +161,13 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(comments).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test('GET 200 when article has no comment', () => {
+    return request(app)
+    .get("/api/articles/2/comments")
+    .expect(200)
+    .then((res) => {
+      const { comments } = res.body;
+      expect(comments).toHaveLength(0)
+    })
+  })
 });
