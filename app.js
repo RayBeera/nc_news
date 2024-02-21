@@ -2,15 +2,18 @@ const express = require("express");
 const {
   getAllTopics,
   getAllEndpoint,
-  getArticleById,
-  getAllArticles,
   getAllComments,
-} = require("./app.controller");
+} = require("./controller/topics.controller");
 const {
   handleCustomErrors,
   handlePsqlErrors,
   handleServerErrors,
-} = require("../errorhandling");
+} = require("./errorhandling");
+
+const {
+  getArticleById,
+  getAllArticles,
+} = require("./controller/articles.controller");
 
 const app = express();
 
