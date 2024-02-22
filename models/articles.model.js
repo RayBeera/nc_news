@@ -1,14 +1,14 @@
 const db = require("../db/connection.js");
 const fs = require("fs/promises");
 
-function selectArticleById(articles_id) {
+function selectArticleById(article_id) {
   return db
     .query(
       `
     SELECT *
     FROM articles
     WHERE article_id = $1`,
-      [articles_id]
+      [article_id]
     )
     .then((article) => {
       if (article.rows.length === 0) {

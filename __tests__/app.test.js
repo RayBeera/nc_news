@@ -172,3 +172,27 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id/comments", () => {
+  it("it should add a new comment and sends it back", () => {
+    const newComment = {
+      username: 'butter_bridge',
+      body: "Huskies are good-natured and people-loving",
+    };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(newComment)
+      .expect(201)
+      .then((res) => {
+        const { comment } = res.body;
+        expect(comment).toMatchObject({
+          body: "Huskies are good-natured and people-loving",
+          votes: expect.any(Number),
+          author: 'butter_bridge',
+          article_id: 3,
+          created_at: expect.any(String),
+          comment_id: expect.any(Number),
+        });
+      });
+  });
+});
