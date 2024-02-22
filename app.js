@@ -15,7 +15,7 @@ const {
   getAllArticles,
 } = require("./controller/articles.controller");
 
-const {postComments} = require("./controller/comments.controller");
+const { postComments } = require("./controller/comments.controller");
 
 const app = express();
 

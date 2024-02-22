@@ -176,7 +176,7 @@ describe("GET /api/articles/:article_id/comments", () => {
 describe("/api/articles/:article_id/comments", () => {
   it("it should add a new comment and sends it back", () => {
     const newComment = {
-      username: 'butter_bridge',
+      username: "butter_bridge",
       body: "Huskies are good-natured and people-loving",
     };
     return request(app)
@@ -188,11 +188,62 @@ describe("/api/articles/:article_id/comments", () => {
         expect(comment).toMatchObject({
           body: "Huskies are good-natured and people-loving",
           votes: expect.any(Number),
-          author: 'butter_bridge',
+          author: "butter_bridge",
           article_id: 3,
           created_at: expect.any(String),
           comment_id: expect.any(Number),
         });
+      });
+  });
+  it("GET 400 status and error message when given an invalid id", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "Huskies are good-natured and people-loving",
+    };
+    return request(app)
+      .post("/api/articles/banana/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  it("GET 404 send error mesaage when user doesn't exist", () => {
+    const newComment = {
+      username: "butter_house",
+      body: "Huskies are good-natured and people-loving",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(`Bad request`);
+      });
+  });
+  it("GET 400 send error mesaage when body is empty", () => {
+    const newComment = {
+      username: "butter_house",
+      body: "",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(`Bad request`);
+      });
+  });
+  it("GET 400 send error mesaage when request object is missing keys", () => {
+    const newComment = {
+      username: "butter_house",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(`Bad request`);
       });
   });
 });
