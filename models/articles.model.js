@@ -1,24 +1,19 @@
 const db = require("../db/connection.js");
 const fs = require("fs/promises");
 
+let queryString = `SELECT *
+FROM articles
+WHERE article_id = $1`;
 function selectArticleById(article_id) {
-  return db
-    .query(
-      `
-    SELECT *
-    FROM articles
-    WHERE article_id = $1`,
-      [article_id]
-    )
-    .then((article) => {
-      if (article.rows.length === 0) {
-        return Promise.reject({
-          status: 404,
-          msg: "article not found",
-        });
-      }
-      return article.rows[0];
-    });
+  return db.query(queryString, [article_id]).then((article) => {
+    if (article.rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        msg: "article not found",
+      });
+    }
+    return article.rows[0];
+  });
 }
 
 function selectAllArticles() {
@@ -36,9 +31,31 @@ function selectAllArticles() {
       return article.rows;
     });
 }
-module.exports = {
-   
-    selectArticleById,
-    selectAllArticles,
 
-  };
+function insertUpdatedArticle(article_id, inc_votes) {
+  
+  return db
+    .query(
+      `
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *;`,
+      [inc_votes, article_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "article not found",
+        });
+      }
+      return result.rows[0];
+    })
+}
+
+module.exports = {
+  selectArticleById,
+  selectAllArticles,
+  insertUpdatedArticle,
+};

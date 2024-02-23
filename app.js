@@ -13,6 +13,7 @@ const {
 const {
   getArticleById,
   getAllArticles,
+  updateArticle,
 } = require("./controller/articles.controller");
 
 const { postComments } = require("./controller/comments.controller");
@@ -32,6 +33,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getAllCommentsById);
 
 app.post("/api/articles/:article_id/comments", postComments);
+
+app.patch("/api/articles/:article_id", updateArticle);
 
 app.use(handleCustomErrors);
 

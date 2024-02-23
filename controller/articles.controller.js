@@ -1,6 +1,7 @@
 const {
   selectArticleById,
   selectAllArticles,
+  insertUpdatedArticle,
 } = require("../models/articles.model");
 
 function getArticleById(req, res, next) {
@@ -23,7 +24,26 @@ function getAllArticles(req, res, next) {
       next(err);
     });
 }
+
+function updateArticle(req, res, next) {
+  const { article_id } = req.params;
+
+  const { inc_votes } = req.body;
+  // if (inc_votes === undefined || inc_votes === 0) {
+
+  Promise.all([
+    selectArticleById(article_id),
+    insertUpdatedArticle(article_id, inc_votes),
+  ])
+    .then((article) => {
+      res.status(200).send({ article: article[1] });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
 module.exports = {
   getArticleById,
   getAllArticles,
+  updateArticle,
 };
