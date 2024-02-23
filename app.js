@@ -36,6 +36,8 @@ app.post("/api/articles/:article_id/comments", postComments);
 
 app.patch("/api/articles/:article_id", updateArticle);
 
+app.delete("/api/comments/:comment_id")
+
 app.use(handleCustomErrors);
 
 app.use(handlePsqlErrors);
