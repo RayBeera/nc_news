@@ -172,3 +172,161 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id/comments", () => {
+  it("it should add a new comment and sends it back", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "Huskies are good-natured and people-loving",
+    };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(newComment)
+      .expect(201)
+      .then((res) => {
+        const { comment } = res.body;
+        expect(comment).toMatchObject({
+          body: "Huskies are good-natured and people-loving",
+          votes: expect.any(Number),
+          author: "butter_bridge",
+          article_id: 3,
+          created_at: expect.any(String),
+          comment_id: expect.any(Number),
+        });
+      });
+  });
+  it("GET 400 status and error message when given an invalid id", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "Huskies are good-natured and people-loving",
+    };
+    return request(app)
+      .post("/api/articles/banana/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  it("GET 404 send error mesaage when user doesn't exist", () => {
+    const newComment = {
+      username: "butter_house",
+      body: "Huskies are good-natured and people-loving",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(`Bad request`);
+      });
+  });
+  it("GET 400 send error mesaage when body is empty", () => {
+    const newComment = {
+      username: "butter_house",
+      body: "",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(`Bad request`);
+      });
+  });
+  it("GET 400 send error mesaage when request object is missing keys", () => {
+    const newComment = {
+      username: "butter_house",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(`Bad request`);
+      });
+  });
+});
+
+describe("PATCH api/articles/:article_id", () => {
+  it("update an article", () => {
+    const vote = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(200)
+      .then((res) => {
+        const { article } = res.body;
+        expect(article).toMatchObject({
+          article_id: 1,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 101,
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  it(" decrement the current article's votes when inc_votes = -10 ", () => {
+    const vote = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(200)
+      .then((res) => {
+        const { article } = res.body;
+        expect(article).toMatchObject({
+          article_id: 1,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 90,
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  it("return the original article when inc_votes = 0 ", () => {
+    const vote = { inc_votes: 0 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(200)
+      .then((res) => {
+        const { article } = res.body;
+        expect(article).toMatchObject({
+          article_id: 1,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 100,
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  it("GET 400 status and error message when given an invalid id", () => {
+    const vote = { inc_votes: 0 };
+    return request(app)
+      .patch("/api/articles/banana")
+      .send(vote)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  it("GET 404 status and error message when given a valid but non-existent id", () => {
+    const vote = { inc_votes: 0 };
+    return request(app)
+      .patch("/api/articles/999")
+      .send(vote)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not found");
+      });
+  });
+});

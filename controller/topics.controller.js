@@ -39,7 +39,6 @@ function getAllCommentsById(req, res, next) {
 
   Promise.all(promises)
     .then((result) => {
-      console.log(result);
       res.status(200).send({ comments: result[0] });
     })
     .catch((err) => {
