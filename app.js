@@ -16,7 +16,12 @@ const {
   updateArticle,
 } = require("./controller/articles.controller");
 
-const { postComments } = require("./controller/comments.controller");
+const getAllUsers = require("./controller/users.controller");
+
+const {
+  postComments,
+  deleteCommentByid,
+} = require("./controller/comments.controller");
 
 const app = express();
 
@@ -32,11 +37,13 @@ app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id/comments", getAllCommentsById);
 
+app.get("/api/users", getAllUsers);
+
 app.post("/api/articles/:article_id/comments", postComments);
 
 app.patch("/api/articles/:article_id", updateArticle);
 
-app.delete("/api/comments/:comment_id")
+app.delete("/api/comments/:comment_ids", deleteCommentByid);
 
 app.use(handleCustomErrors);
 

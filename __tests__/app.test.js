@@ -319,7 +319,7 @@ describe("PATCH api/articles/:article_id", () => {
         expect(res.body.msg).toBe("Bad request");
       });
   });
-  it("GET 404 status and error message when given a valid but non-existent id", () => {
+  it(" 404 status and error message when given a valid but non-existent id", () => {
     const vote = { inc_votes: 0 };
     return request(app)
       .patch("/api/articles/999")
@@ -327,6 +327,46 @@ describe("PATCH api/articles/:article_id", () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("article not found");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("204: delete the gicen comment by comment_id and return no content ", () => {
+    return request(app).delete("/api/comments/4").expect(204);
+  });
+  test("404 status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("comment not found");
+      });
+  });
+  test("DELETE:400 sends an appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .delete("/api/comments/banana")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+});
+describe("GET /api/users", () => {
+  it.only("return an array of users objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((res) => {
+        const { users } = res.body;
+        expect(users.length).toBe(4);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });
