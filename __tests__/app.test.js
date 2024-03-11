@@ -114,6 +114,18 @@ describe("GET /api/articles", () => {
         expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
+  // test.only("should take a topic query that returns only articles of the given topic", () => {
+  //   return request(app)
+  //     .get("/api/articles?topic=cats")
+  //     .expect(200)
+  //     .then((res) => {
+  //       const { articles } = res.body;
+  //       expect(articles).toHaveLength(1);
+  //       articles.forEach((snack) => {
+  //         expect(snack.topic).toBe("cats");
+  //       });
+  //     });
+  // });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
@@ -353,7 +365,7 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 describe("GET /api/users", () => {
-  it.only("return an array of users objects", () => {
+  it("return an array of users objects", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
