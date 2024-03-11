@@ -16,7 +16,8 @@ function selectArticleById(article_id) {
   });
 }
 
-function selectAllArticles() {
+function selectAllArticles(topic) {
+
   return db
     .query(
       `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url,
